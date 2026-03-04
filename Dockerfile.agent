@@ -1,0 +1,24 @@
+# FROM jenkins/jenkins:latest
+# USER root
+# RUN apt-get update && apt-get install -y lsb-release python3-pip
+# USER jenkins
+# RUN jenkins-plugin-cli --plugins "blueocean:latest docker-workflow:1.28"
+
+FROM alpine:latest
+USER root
+
+# Install dependencies using Alpine's package manager
+RUN apk update && apk add --no-cache \
+    lsb-release \
+    python3 \
+    py3-pip \
+    openjdk11-jre \
+    bash \
+    curl
+
+# Ensure the Jenkins home directory exists for the 404 fix
+RUN mkdir -p /home/jenkins && \
+    adduser -D -h /home/jenkins jenkins && \
+    chown -R jenkins:jenkins /home/jenkins
+
+USER jenkins
